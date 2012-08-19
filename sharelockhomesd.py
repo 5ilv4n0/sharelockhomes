@@ -9,17 +9,6 @@ import sys, json
 import lib.basic as basic
 
 
-defaultConfiguration = {
-    'logging': False,
-    'server': {
-        'cert': 'cert.pem',
-        'key': 'key.pem',
-        'listen': '0.0.0.0',
-        'port': 10023
-        }
-    }
-
-
 def main():
     logging = log(filePath='sharelockhomes.log')
     parameter = basic.getParameter(sys.argv)
@@ -31,8 +20,13 @@ def main():
     finally:
         configuration = basic.getConfigFromFile(configFilePath)
         if configuration == {}:
-            configuration = defaultConfiguration
-            logging.write('Configfile "' + configFilePath + '" does not exists or is not a valid json file! Will use defaults.')
+            configuration = DEFAULTCONFIG
+            logging.write(LOGTAGS[1]+'Configfile "' + configFilePath + '" does not exists or is not a valid json file! Will use defaults.')
+
+
+
+
+
 
     logging.writeToFile = configuration['logging']
     logging.write('ShareLockHomes v' + VERSION + ' starting up')
