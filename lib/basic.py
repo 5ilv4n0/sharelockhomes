@@ -3,7 +3,7 @@
 #
 #  Copyright 2012 Silvano Wegener & Daniel Henschel
 
-import json, sys
+import json, sys, os
 
 
 def quit(logFile, noError=True):
@@ -28,29 +28,27 @@ def getParameter(argv):
     options = []
     arguments = []
     parameters = {}
-
     for arg in argv:
         if arg[0] == '-':
             options.append(arg)
         else:
             arguments.append(arg)
-
     if len(options) != len(arguments):
         print 'SYNTAX ERROR'
         return {}
-
     for ID in xrange(len(options)):
         parameters[options[ID].replace('--','')] = arguments[ID]
     return parameters
 
 
 def getConfigFromFile(logFile, configFilePath):
+    noErrors = True
+    if not os.path.isfile(configFilePath):
+        logFile.write('config "' + configFilePath + '" do not exists!')
+        quit(logFile, False)
     with open(configFilePath, 'r') as f:
         if not isJsonFile(configFilePath):
-            if not logFile == False:
-                logFile.write('config "' + configFilePath + '" not valid!')
+            logFile.write('config "' + configFilePath + '" not valid!')
             quit(logFile, False)
         configuration = json.load(f)
         return configuration
-
-
