@@ -5,7 +5,6 @@
 
 from lib.settings import *
 from lib.logging import log
-from lib.Sock import SockServer, ServerHandler
 import sys, json
 import lib.basic as basic
 
@@ -27,9 +26,6 @@ def main():
 
     logFile.writeToFile = configuration['logging']
     logFile.write('ShareLockHomes v' + VERSION + ' starting up')
-
-    server = SockServer(ServerHandler, configuration, logFile)
-    server.serve_forever()
 
 
 
