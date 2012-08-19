@@ -3,8 +3,8 @@
 #
 #  Copyright 2012 Silvano Wegener & Daniel Henschel
 
-from lib.logging import log
 from lib.settings import *
+from lib.logging import log
 
 # junk - muss in die config
 logging = True
