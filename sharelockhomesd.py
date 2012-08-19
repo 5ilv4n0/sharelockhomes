@@ -13,18 +13,12 @@ import lib.basic as basic
 
 
 
-
-
-
-
-
 def main():
-    logFile = log('sharelockhomes.log', True)
-    parameter = basic.getParameter(sys.argv)
-    configuration = basic.getConfigFromFile(logFile, parameter['config'])
-    logFile.enabled = configuration['logging']
+    logFile             = log('sharelockhomes.log', True)
+    parameter           = basic.getParameter(sys.argv)
+    configuration       = basic.getConfigFromFile(logFile, parameter['config'])
+    logFile.enabled     = configuration['logging']
     logFile.write('ShareLockHomes v' + VERSION + ' starting up')
-
 
 
     basic.quit(logFile, True)

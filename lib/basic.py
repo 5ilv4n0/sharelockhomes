@@ -47,7 +47,8 @@ def getParameter(argv):
 def getConfigFromFile(logFile, configFilePath):
     with open(configFilePath, 'r') as f:
         if not isJsonFile(configFilePath):
-            logFile.write('config "' + configFilePath + '" not valid!')
+            if not logFile == False:
+                logFile.write('config "' + configFilePath + '" not valid!')
             quit(logFile, False)
         configuration = json.load(f)
         return configuration
