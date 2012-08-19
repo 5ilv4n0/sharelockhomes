@@ -7,7 +7,7 @@ import SocketServer, socket
 from OpenSSL import SSL
 
 class SockServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
-    def __init__(self, RequestHandlerClass, configuration, logfile):
+    def __init__(self, RequestHandlerClass, configuration, logging):
         listenaddress = configuration['server']['listen']
         listenport    = configuration['server']['port']
         x509cert      = configuration['server']['cert']

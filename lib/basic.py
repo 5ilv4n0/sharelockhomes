@@ -6,12 +6,10 @@
 import json, sys, os
 
 
-def quit(logFile, noError=True):
+def quit(noError=True):
     if noError == False:
-        logFile.write('abort with errors!')
         sys.exit(1)
     sys.exit()
-
 
 
 def isJsonFile(filePath):
@@ -41,14 +39,11 @@ def getParameter(argv):
     return parameters
 
 
-def getConfigFromFile(logFile, configFilePath):
-    noErrors = True
+def getConfigFromFile(configFilePath):
     if not os.path.isfile(configFilePath):
-        logFile.write('config "' + configFilePath + '" do not exists!')
-        quit(logFile, False)
+        return {}
+    if not isJsonFile(configFilePath):
+        return {}
     with open(configFilePath, 'r') as f:
-        if not isJsonFile(configFilePath):
-            logFile.write('config "' + configFilePath + '" not valid!')
-            quit(logFile, False)
         configuration = json.load(f)
         return configuration

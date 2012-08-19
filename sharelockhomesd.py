@@ -9,12 +9,19 @@ import sys, json
 import lib.basic as basic
 
 
-
-
+defaultConfiguration = {
+    'logging': False,
+    'server': {
+        'cert': 'cert.pem',
+        'key': 'key.pem',
+        'listen': '0.0.0.0',
+        'port': 10023
+        }
+    }
 
 
 def main():
-    logFile = log(filePath='sharelockhomes.log', writeToFile=True)
+    logging = log(filePath='sharelockhomes.log')
     parameter = basic.getParameter(sys.argv)
 
     try:
@@ -22,14 +29,17 @@ def main():
     except KeyError:
         configFilePath = 'sharelockhomes.conf'
     finally:
-        configuration = basic.getConfigFromFile(logFile, configFilePath)
+        configuration = basic.getConfigFromFile(configFilePath)
+        if configuration == {}:
+            configuration = defaultConfiguration
+            logging.write('Configfile "' + configFilePath + '" does not exists or is not a valid json file! Will use defaults.')
 
-    logFile.writeToFile = configuration['logging']
-    logFile.write('ShareLockHomes v' + VERSION + ' starting up')
+    logging.writeToFile = configuration['logging']
+    logging.write('ShareLockHomes v' + VERSION + ' starting up')
 
 
 
-    basic.quit(logFile, True)
+    basic.quit(True)
     return 0
 
 
