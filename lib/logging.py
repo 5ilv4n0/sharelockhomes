@@ -6,24 +6,27 @@
 import os, time
 
 class log(object):
+    fileBuffer = None
+
     def __init__(self, **keyWordArgs):
         try:
             self.filePath = keyWordArgs['filePath']
         except KeyError:
             self.filePath = 'log.log'
+
         try:
             self.writeToFile = keyWordArgs['writeToFile']
         except KeyError:
             self.writeToFile = False
-        self.filePath = os.path.abspath(self.filePath)
+
         if self.writeToFile == True:
-            self.fileBuffer = open(self.filePath,'a')
+            self.activate()
 
 
     def write(self, line):
         dateTimeStamp = self.nowDateTimeStamp()
         logLine = self.makeLogLine(dateTimeStamp, line)
-        if self.writeToFile:
+        if self.writeToFile == True:
             self.fileBuffer.write(logLine)
             self.fileBuffer.flush()
         print logLine.replace(os.linesep,'')
@@ -44,6 +47,8 @@ class log(object):
         return ' '.join(logLine)
 
 
-    def __del__(self):
+    def activate(self):
         if self.writeToFile == True:
-            self.fileBuffer.close()
+            self.filePath = os.path.abspath(self.filePath)
+            self.fileBuffer = open(self.filePath,'a')
+
