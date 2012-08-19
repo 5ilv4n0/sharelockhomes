@@ -1,3 +1,4 @@
 # compiled python
 *.py[cod]
 *.log
+*.pem
