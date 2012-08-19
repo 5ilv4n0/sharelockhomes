@@ -5,9 +5,12 @@
 
 from lib.settings import *
 from lib.logging import log
+import sys, json
+import lib.basic as basic
 
-# junk - muss in die config
-logging = True
+
+
+
 
 
 
@@ -16,12 +19,18 @@ logging = True
 
 
 def main():
-    logFile = log('sharelockhomes.log', logging)
+    logFile = log('sharelockhomes.log', True)
+    parameter = basic.getParameter(sys.argv)
+    configuration = basic.getConfigFromFile(logFile, parameter['config'])
+    logFile.enabled = configuration['logging']
     logFile.write('ShareLockHomes v' + VERSION + ' starting up')
 
 
-    del logFile
+
+    basic.quit(logFile, True)
     return 0
+
+
 
 if __name__ == '__main__':
     main()
