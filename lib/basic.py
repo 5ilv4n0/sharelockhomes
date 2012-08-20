@@ -52,7 +52,7 @@ def quit(noError=True, **keyWordArgs):
     try: 
         logTagID = keyWordArgs['logTag']
     except KeyError:
-        logTagID = 1
+        logTagID = 2
     try: 
         message = keyWordArgs['message']
     except KeyError:
