@@ -7,17 +7,20 @@ import json, sys, os
 from settings import *
 
 class Basic(object):
-    def __init__(self, argv):
+    def __init__(self, argv, logging):
         self.configuration = {}
         self.parameters = {}
         self.logFilePath = ''
+        self.logging = logging
 
         self.getParameters(argv)
         self.getConfig()
 
     def quit(self, noError=True):
         if noError == False:
+            self.logging.write('Exiting with error')
             sys.exit(1)
+        self.logging.write('Exiting without error')
         sys.exit()
 
     def isJsonFile(self, filePath):

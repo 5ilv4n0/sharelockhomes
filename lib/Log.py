@@ -5,7 +5,7 @@
 
 import os, time
 
-class log(object):
+class Log(object):
     fileBuffer = None
 
     def __init__(self, **keyWordArgs):

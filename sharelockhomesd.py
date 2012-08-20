@@ -3,22 +3,16 @@
 #
 #  Copyright 2012 Silvano Wegener & Daniel Henschel
 
-from lib.basic import Basic
+from lib.Basic import Basic
+from lib.Log import Log
 from lib.settings import *
-from lib.logging import log
 import sys, json
 
 
 def main():
-    basic = Basic(sys.argv)
-    print basic.configuration
-
-    #if forceLoggingToFile == False:
-    #    if configuration['logging'] == True:
-    #        logging.writeToFile = True
-    #        logging.activate()
-
-    #logging.write('ShareLockHomes v' + VERSION + ' starting up')
+    logging = Log(filepath='sharelockhomes.log', writeToFile='False')
+    logging.write('ShareLockHomes v' + VERSION + ' starting up')
+    basic = Basic(sys.argv, logging)
 
     basic.quit(True)
     return 0
