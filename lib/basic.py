@@ -4,46 +4,63 @@
 #  Copyright 2012 Silvano Wegener & Daniel Henschel
 
 import json, sys, os
+from settings import *
 
+class Basic(object):
+    def __init__(self, argv):
+        self.configuration = {}
+        self.parameters = {}
+        self.logFilePath = ''
 
-def quit(noError=True):
-    if noError == False:
-        sys.exit(1)
-    sys.exit()
+        self.getParameters(argv)
+        self.getConfig()
 
+    def quit(self, noError=True):
+        if noError == False:
+            sys.exit(1)
+        sys.exit()
 
-def isJsonFile(filePath):
-    with open(filePath, 'r') as f:
+    def isJsonFile(self, filePath):
+        with open(filePath, 'r') as f:
+            try:
+                json.load(f)
+                return True
+            except ValueError:
+                return False
+
+    def getParameters(self, argv):
+        argv = argv[1:]
+        options = []
+        arguments = []
+        for arg in argv:
+            if arg[0] == '-':
+                options.append(arg)
+            else:
+                arguments.append(arg)
+        if len(options) != len(arguments):
+            print 'SYNTAX ERROR'
+            return {}
+        for ID in xrange(len(options)):
+            self.parameters[options[ID].replace('--','')] = arguments[ID]
+
+    def getConfigFromFile(self, path):
+        if not os.path.isfile(path):
+            return {}
+        if not self.isJsonFile(path):
+            return {}
+        with open(path, 'r') as f:
+            self.configuration = json.load(f)
+
+    def getConfig(self):
         try:
-            json.load(f)
-            return True
-        except ValueError:
-            return False
+            self.logFilePath = self.parameters['log']
+        except KeyError:
+            self.logFilePath = 'sharelockhomes.log'
 
+        try:
+            self.getConfigFromFile(self.parameters['config'])
+        except KeyError:
+            self.getConfigFromFile('sharelockhomes.conf')
 
-def getParameter(argv):
-    argv = argv[1:]
-    options = []
-    arguments = []
-    parameters = {}
-    for arg in argv:
-        if arg[0] == '-':
-            options.append(arg)
-        else:
-            arguments.append(arg)
-    if len(options) != len(arguments):
-        print 'SYNTAX ERROR'
-        return {}
-    for ID in xrange(len(options)):
-        parameters[options[ID].replace('--','')] = arguments[ID]
-    return parameters
-
-
-def getConfigFromFile(configFilePath):
-    if not os.path.isfile(configFilePath):
-        return {}
-    if not isJsonFile(configFilePath):
-        return {}
-    with open(configFilePath, 'r') as f:
-        configuration = json.load(f)
-        return configuration
+        if self.configuration == {}:
+            self.configuration = DEFAULTCONFIG
