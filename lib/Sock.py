@@ -8,11 +8,13 @@ from OpenSSL import SSL
 
 class SockServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     def __init__(self, RequestHandlerClass, configuration, logging):
-        listenaddress = configuration['server']['listen']
-        listenport    = configuration['server']['port']
-        x509cert      = configuration['server']['cert']
-        x509key       = configuration['server']['key']
+        listenaddress = configuration['listen']
+        listenport    = configuration['port']
+        x509cert      = configuration['cert']
+        x509key       = configuration['key']
 
+        logging.write('Starting SockServer on ' + listenaddress + ':' +
+                      str(listenport) + ' TCP')
         SocketServer.BaseServer.__init__(self, (listenaddress, listenport),
                                          RequestHandlerClass)
         ctx = SSL.Context(SSL.SSLv23_METHOD)
@@ -29,7 +31,19 @@ class ServerHandler(SocketServer.StreamRequestHandler):
     def handle(self):
         self.data = self.request.recv(1024).strip()
         while self.data:
-            print '{} wrote: '.format(self.client_address[0]) + self.data
+            print 'Server {} wrote: '.format(self.client_address[0]) + self.data
+            self.data = self.request.recv(1024).strip()
+
+    def setup(self):
+        self.connection = self.request
+        self.rfile = socket._fileobject(self.request, "rb", self.rbufsize)
+        self.wfile = socket._fileobject(self.request, "wb", self.wbufsize)
+
+class ClientHandler(SocketServer.StreamRequestHandler):
+    def handle(self):
+        self.data = self.request.recv(1024).strip()
+        while self.data:
+            print 'Client {} wrote: '.format(self.client_address[0]) + self.data
             self.data = self.request.recv(1024).strip()
 
     def setup(self):
