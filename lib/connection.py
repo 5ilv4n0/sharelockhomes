@@ -3,6 +3,7 @@
 #
 #  Copyright 2012 Silvano Wegener & Daniel Henschel
 
+from log import LOGTAGS
 import SocketServer, socket
 from OpenSSL import SSL
 
@@ -13,7 +14,7 @@ class SockServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
         x509cert      = configuration['cert']
         x509key       = configuration['key']
 
-        logging.write('Starting SockServer on ' + listenaddress + ':' +
+        logging.write(LOGTAGS[0] + 'Starting SockServer on ' + listenaddress + ':' +
                       str(listenport) + ' TCP')
         SocketServer.BaseServer.__init__(self, (listenaddress, listenport),
                                          RequestHandlerClass)

@@ -3,18 +3,23 @@
 #
 #  Copyright 2012 Silvano Wegener & Daniel Henschel
 
-VERSION = '0.1'
+VERSION = '0.1a'
 COPYRIGHT = '2012 Silvano Wegener & Daniel Henschel'
-
-LOGTAGS = {0: 'INFO: ', 1: 'WARNING: ', 2: 'ERROR: '}
 
 DEFAULTCONFIG = {
     'logging': False,
+    'logFilePath': 'sharelockhomes.log',
     'server': {
         'cert': 'cert.pem',
         'key': 'key.pem',
         'listen': '0.0.0.0',
         'port': 10023
-    }
+    },
+    'client': {
+        'cert': 'cert.pem',
+        'key': 'key.pem',
+        'listen': "0.0.0.0",
+        'port': 10024
+        }
 }
 

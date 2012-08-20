@@ -5,30 +5,32 @@
 
 import os, time
 
-class Log(object):
-    fileBuffer = None
 
+LOGTAGS = {0: 'INFO: ', 1: 'WARNING: ', 2: 'ERROR: '}
+
+
+class Log(object):
     def __init__(self, **keyWordArgs):
         try:
             self.filePath = keyWordArgs['filePath']
         except KeyError:
             self.filePath = 'log.log'
-
         try:
             self.writeToFile = keyWordArgs['writeToFile']
         except KeyError:
             self.writeToFile = False
-
         if self.writeToFile == True:
-            self.activate()
+            self.activateFileMode(self.filePath)
+            self.write(LOGTAGS[0] + 'Use "' + self.filePath + '" as logfile', True)
 
 
-    def write(self, line):
+    def write(self, line, ignoreFile=False):
         dateTimeStamp = self.nowDateTimeStamp()
         logLine = self.makeLogLine(dateTimeStamp, line)
-        if self.writeToFile == True:
-            self.fileBuffer.write(logLine)
-            self.fileBuffer.flush()
+        if not ignoreFile:
+            if self.writeToFile == True:
+                self.fileBuffer.write(logLine)
+                self.fileBuffer.flush()
         print logLine.replace(os.linesep,'')
         return True
 
@@ -47,8 +49,17 @@ class Log(object):
         return ' '.join(logLine)
 
 
-    def activate(self):
-        if self.writeToFile == True:
-            self.filePath = os.path.abspath(self.filePath)
-            self.fileBuffer = open(self.filePath,'a')
+    def activateFileMode(self, filePath):
+        self.writeToFile = True		
+        self.filePath = os.path.abspath(filePath)
+        self.fileBuffer = self.openLogFile(filePath)
+
+
+    def openLogFile(self, filePath):
+        try:
+            return open(filePath,'a')
+        except IOError:
+            self.write(LOGTAGS[1] + 'Permission denied for logfile "' + filePath + '". Use "/tmp/log.log"', True)
+            return open('/tmp/log.log','a')
+            
 
