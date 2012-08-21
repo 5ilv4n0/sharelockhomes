@@ -11,14 +11,14 @@ DEFAULTCONFIG = {
     'logging': False,
     'logFilePath': 'sharelockhomes.log',
     'server': {
-        'cert': 'cert.pem',
-        'key': 'key.pem',
+        'cert': 'src/cert.pem',
+        'key': 'src/key.pem',
         'listen': '0.0.0.0',
         'port': 10023
     },
     'client': {
-        'cert': 'cert.pem',
-        'key': 'key.pem',
+        'cert': 'src/cert.pem',
+        'key': 'src/key.pem',
         'listen': "0.0.0.0",
         'port': 10024
         }

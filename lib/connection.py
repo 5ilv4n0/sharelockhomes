@@ -15,10 +15,8 @@ class SockServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
         x509cert      = configuration['cert']
         x509key       = configuration['key']
 
-        LOGGER.write(LOGTAGS[0] + 'Starting SockServer on ' + listenaddress + ':' +
-                      str(listenport) + ' TCP')
-        SocketServer.BaseServer.__init__(self, (listenaddress, listenport),
-                                         RequestHandlerClass)
+        LOGGER.write(LOGTAGS[0] + 'Starting SockServer on ' + listenaddress + ':' + str(listenport) + ' TCP')
+        SocketServer.BaseServer.__init__(self, (listenaddress, listenport), RequestHandlerClass)
         ctx = SSL.Context(SSL.SSLv23_METHOD)
         ctx.use_certificate_file(x509cert)
         ctx.use_privatekey_file(x509key)

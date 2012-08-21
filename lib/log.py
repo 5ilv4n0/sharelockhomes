@@ -7,7 +7,7 @@
 import os, time
 
 
-LOGTAGS = {0: 'INFO: ', 1: 'WARNING: ', 2: 'ERROR: '}
+LOGTAGS = {0: 'INFO:', 1: 'WARNING:', 2: 'ERROR:'}
 
 class Log(object):
     def __init__(self, **keyWordArgs):
@@ -21,19 +21,26 @@ class Log(object):
             self.writeToFile = False
         if self.writeToFile == True:
             self.activateFileMode(self.filePath)
-            self.write(LOGTAGS[0] + 'Use "' + self.filePath + '" as logfile', True)
+            self.write(LOGTAGS[0],'Use "' + self.filePath + '" as logfile.')
 
 
-    def write(self, line, ignoreFile=False):
+    def write(self, *lineParts):
+        line = " ".join(lineParts)
         dateTimeStamp = self.nowDateTimeStamp()
         logLine = self.makeLogLine(dateTimeStamp, line)
-        if not ignoreFile:
-            if self.writeToFile == True:
-                self.fileBuffer.write(logLine)
-                self.fileBuffer.flush()
+        if self.writeToFile == True:
+            self.fileBuffer.write(logLine)
+            self.fileBuffer.flush()
         print logLine.replace(os.linesep,'')
         return True
 
+  
+    def writeConsoleOnly(self, *lineParts):
+        line = " ".join(lineParts)
+        dateTimeStamp = self.nowDateTimeStamp()
+        logLine = self.makeLogLine(dateTimeStamp, line)
+        print logLine.replace(os.linesep,'')
+        return True
 
     def nowDateTimeStamp(self):
         dateTimeStamp = time.strftime("[%d.%m.%Y - %H:%M:%S]", time.localtime())
@@ -59,7 +66,7 @@ class Log(object):
         try:
             return open(filePath,'a')
         except IOError:
-            self.write(LOGTAGS[1] + 'Permission denied for logfile "' + filePath + '". Use "/tmp/log.log"', True)
+            self.writeConsoleOnly(LOGTAGS[1],'Permission denied for logfile "' + filePath + '". Use "/tmp/log.log".')
             return open('/tmp/log.log','a')
             
 LOGGER = Log()

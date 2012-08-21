@@ -22,7 +22,7 @@ def initiateLogAndConfig():
         LOGGER.activateFileMode(logFilePath)
     except KeyError:
         pass      
-    LOGGER.write(log.LOGTAGS[0] + 'Try to use config from file "' + configFilePath + '"')
+    LOGGER.write(log.LOGTAGS[0],'Try to use config from file "' + configFilePath + '"')
     configuration = config(configFilePath)
     return configuration 
 
@@ -56,9 +56,9 @@ def quit(noError=True, **keyWordArgs):
         message = 'unknown error!'       
 
     if noError == False:
-        LOGGER.write(log.LOGTAGS[logTagID] + message)
+        LOGGER.write(log.LOGTAGS[logTagID],message)
         sys.exit(1)
-    LOGGER.write(log.LOGTAGS[0] + 'Exiting without error')
+    LOGGER.write(log.LOGTAGS[0],'Exiting without error')
     sys.exit()
 
 
@@ -85,13 +85,13 @@ class config(object):
 
     def getConfigFromFile(self, filePath):
         if not os.path.isfile(filePath):
-            LOGGER.write(log.LOGTAGS[1] + 'Configfile "' + filePath + '" does not exists! Will use default config.')
+            LOGGER.write(log.LOGTAGS[1],'Configfile "' + filePath + '" does not exists! Will use default config.')
             return {}
         if not isJsonFile(filePath):
-            LOGGER.write(log.LOGTAGS[1] + 'Configfile "' + filePath + '" is no valid json file! Will use default config.')
+            LOGGER.write(log.LOGTAGS[1],'Configfile "' + filePath + '" is no valid json file! Will use default config.')
             return {}
         with open(filePath, 'r') as f:
-            LOGGER.write(log.LOGTAGS[0] + 'Configfile "' + filePath + '" is valid.')
+            LOGGER.write(log.LOGTAGS[0],'Configfile "' + filePath + '" is valid.')
             return json.load(f)
 
 
@@ -101,7 +101,7 @@ class config(object):
             f.write(jsonEncoded)
             f.flush()
             f.close()
-            LOGGER.write(log.LOGTAGS[0] + 'Config written to "' + self.filePath + '"')           
+            LOGGER.write(log.LOGTAGS[0],'Default config is written to "' + self.filePath + '"')           
 
 
     def get(self):
