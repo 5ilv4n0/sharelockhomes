@@ -15,9 +15,6 @@ from lib.connection import SockServer, ServerHandler, ClientHandler
 
 
 
-
-
-
 def main():
     configuration = basic.initiateLogAndConfig()
     LOGGER.write(log.LOGTAGS[0] + 'ShareLockHomes V' + settings.VERSION + ' starting up...')
