@@ -3,18 +3,18 @@
 #
 #  Copyright 2012 Silvano Wegener & Daniel Henschel
 
-from log import LOGTAGS
+from log import LOGGER, LOGTAGS
 import SocketServer, socket
 from OpenSSL import SSL
 
 class SockServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
-    def __init__(self, RequestHandlerClass, configuration, logging):
+    def __init__(self, RequestHandlerClass, configuration):
         listenaddress = configuration['listen']
         listenport    = configuration['port']
         x509cert      = configuration['cert']
         x509key       = configuration['key']
 
-        logging.write(LOGTAGS[0] + 'Starting SockServer on ' + listenaddress + ':' +
+        LOGGER.write(LOGTAGS[0] + 'Starting SockServer on ' + listenaddress + ':' +
                       str(listenport) + ' TCP')
         SocketServer.BaseServer.__init__(self, (listenaddress, listenport),
                                          RequestHandlerClass)

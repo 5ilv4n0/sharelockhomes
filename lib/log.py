@@ -8,7 +8,6 @@ import os, time
 
 LOGTAGS = {0: 'INFO: ', 1: 'WARNING: ', 2: 'ERROR: '}
 
-
 class Log(object):
     def __init__(self, **keyWordArgs):
         try:
@@ -62,4 +61,4 @@ class Log(object):
             self.write(LOGTAGS[1] + 'Permission denied for logfile "' + filePath + '". Use "/tmp/log.log"', True)
             return open('/tmp/log.log','a')
             
-
+LOGGER = Log()
