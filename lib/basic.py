@@ -15,6 +15,7 @@ def printHelp():
     print 'ShareLockHomes Version',settings.VERSION,'Help'
     print '-'*len(top)
     print 'Parameters:'
+    print '   --help'
     print '   --config <file>'
     print '   --log <file>'
     print '   --db <dir>'

@@ -13,7 +13,7 @@ import sys, json, threading
 from lib.connection import SockServer, ServerHandler, ClientHandler
 
 
-if len(sys.argv) == 1:
+if len(sys.argv) == 1 or '--help' in sys.argv:
     basic.printHelp()
     sys.exit()
 
