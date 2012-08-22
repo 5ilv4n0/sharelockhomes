@@ -9,6 +9,7 @@ COPYRIGHT = '2012 Silvano Wegener & Daniel Henschel'
 DEFAULTCONFIG = {
     'logging': False,
     'logFilePath': 'sharelockhomes.log',
+    'databasePath': 'db',
     'server': {
         'cert': 'src/cert.pem',
         'key': 'src/key.pem',

@@ -13,10 +13,12 @@ import sys, json, threading
 from lib.connection import SockServer, ServerHandler, ClientHandler
 
 
-
+if len(sys.argv) == 1:
+    basic.printHelp()
+    sys.exit()
 
 def main():
-    configuration = basic.initiateLogAndConfig()
+    configuration = basic.initiateShareLockHomes()
     LOGGER.write(log.LOGTAGS[0],'ShareLockHomes V'+settings.VERSION,'starting up...')
 
 

@@ -7,23 +7,100 @@ from log import LOGGER
 
 import log
 import settings
-import json, sys, os
+import json, sys, os, re
 
 
-def initiateLogAndConfig():
+def printHelp():
+    top = 'ShareLockHomes Version '+settings.VERSION+' Help'
+    print 'ShareLockHomes Version',settings.VERSION,'Help'
+    print '-'*len(top)
+    print 'Parameters:'
+    print '   --config <file>'
+    print '   --log <file>'
+    print '   --db <dir>'
+    print '-'*len(top)
+
+
+
+def createDirectories(*dirs):
+    for path in dirs:
+        LOGGER.write(log.LOGTAGS[0],'Try to create directory "' + path + '"')
+        try:
+            os.makedirs(path, 0664)
+            LOGGER.write(log.LOGTAGS[0],'Directory "' + path + '" created.')
+        except OSError as error:
+            errorCode, errorMessage = getOSErrorMessage(error)
+            logTagID = errorCodeToLogTagID(errorCode)
+            LOGGER.write(log.LOGTAGS[logTagID],'Not able to create directory "' + path + '":',errorMessage+'!')
+
+
+def getOSErrorMessage(error):
+    errorRegex = re.match(r'\[.+ (.+)\] (.+):.+',str(error))
+    return int(errorRegex.groups()[0]), errorRegex.groups()[1] 	
+
+
+def errorCodeToLogTagID(errorCode):
+    if errorCode == 17:
+        logTagID = 0
+    else:
+        logTagID = 2
+    return 	logTagID
+    
+    
+
+
+
+def initiateShareLockHomes():
+    configuration = initiateParameterAndConfig()
+
+    return configuration
+
+
+def initiateParameterAndConfig():
     parameters = getParameters()
-    try:
-        configFilePath = parameters['config']
-    except KeyError:
-        configFilePath = 'sharelockhomes.conf'
-    try:
-        logFilePath = parameters['log']
+    configFilePath = getParameter('config', 'sharelockhomes.conf')
+    logFilePath = getParameter('log')
+    if not logFilePath == False:
         LOGGER.activateFileMode(logFilePath)
-    except KeyError:
-        pass      
+
     LOGGER.write(log.LOGTAGS[0],'Try to use config from file "' + configFilePath + '"')
     configuration = config(configFilePath)
+    
+    logging = getConfigValue(configuration, 'logging')
+    logFilePath = getConfigValue(configuration, 'logFilePath', 'sharelockhomes.log')
+    if logging == True and LOGGER.writeToFile == False:
+        LOGGER.activateFileMode(logFilePath)
+
+    dbPathParameter = getParameter('db')
+    dbPathConfig = getConfigValue(configuration, 'databasePath','db')
+    dbPath = useParameterIfExistsElseUseConfig(dbPathParameter, dbPathConfig)
+
+
+
+    createDirectories(dbPath)      
     return configuration 
+
+
+def useParameterIfExistsElseUseConfig(parameter, config):
+    if not parameter == False:
+        return parameter
+    else:
+        return config
+
+
+def getConfigValue(configuration, value, defaultValue=False):
+    try:
+        return configuration.get()[value]
+    except KeyError:
+        return defaultValue   
+
+
+def getParameter(parameter, defaultValue=False):
+    parameters = getParameters()
+    try:
+        return parameters[parameter]
+    except KeyError:
+        return defaultValue   
 
 
 def getParameters():
@@ -42,6 +119,10 @@ def getParameters():
     for ID in xrange(len(options)):
         parameters[options[ID].replace('--','')] = arguments[ID]
     return parameters
+
+
+
+
 
 
 def quit(noError=True, **keyWordArgs):
@@ -96,7 +177,7 @@ class config(object):
 
     def write(self):
         with open(self.filePath, 'w') as f:
-            jsonEncoded = json.dumps(self.configuration)
+            jsonEncoded = json.dumps(self.configuration, sort_keys=True, indent=4)
             f.write(jsonEncoded)
             f.flush()
             f.close()
