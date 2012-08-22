@@ -22,7 +22,6 @@ def printHelp():
     print '-'*len(top)
 
 
-
 def createDirectories(*dirs):
     for path in dirs:
         LOGGER.write(log.LOGTAGS[0],'Try to create directory "' + path + '"')
@@ -46,14 +45,10 @@ def errorCodeToLogTagID(errorCode):
     else:
         logTagID = 2
     return 	logTagID
-    
-    
-
 
 
 def initiateShareLockHomes():
     configuration = initiateParameterAndConfig()
-
     return configuration
 
 
@@ -63,21 +58,15 @@ def initiateParameterAndConfig():
     logFilePath = getParameter('log')
     if not logFilePath == False:
         LOGGER.activateFileMode(logFilePath)
-
     LOGGER.write(log.LOGTAGS[0],'Try to use config from file "' + configFilePath + '"')
     configuration = config(configFilePath)
-    
     logging = getConfigValue(configuration, 'logging')
     logFilePath = getConfigValue(configuration, 'logFilePath', 'sharelockhomes.log')
     if logging == True and LOGGER.writeToFile == False:
         LOGGER.activateFileMode(logFilePath)
-
     dbPathParameter = getParameter('db')
     dbPathConfig = getConfigValue(configuration, 'databasePath','db')
     dbPath = useParameterIfExistsElseUseConfig(dbPathParameter, dbPathConfig)
-
-
-
     createDirectories(dbPath)      
     return configuration 
 
@@ -105,6 +94,9 @@ def getParameter(parameter, defaultValue=False):
 
 
 def getParameters():
+    if '--help' in sys.argv:
+        printHelp()
+        sys.exit()
     argv = sys.argv[1:]
     options = []
     arguments = []
@@ -114,16 +106,11 @@ def getParameters():
             options.append(arg)
         else:
             arguments.append(arg)
-        
     if len(options) != len(arguments):
         quit(noError=False, logTag=2, message='Syntaxerror in parameters!')
     for ID in xrange(len(options)):
         parameters[options[ID].replace('--','')] = arguments[ID]
     return parameters
-
-
-
-
 
 
 def quit(noError=True, **keyWordArgs):
@@ -141,6 +128,15 @@ def quit(noError=True, **keyWordArgs):
         sys.exit(1)
     LOGGER.write(log.LOGTAGS[0],'Exiting without error')
     sys.exit()
+
+
+def waitForCtrlC():
+    try:
+        while True:
+            pass
+    except KeyboardInterrupt:
+        LOGGER.write(log.LOGTAGS[0],'ShareLockHomes','shutting down...')
+        quit(False, logTag=0, message='Exiting by user.')
 
 
 def isJsonFile(filePath):
