@@ -14,9 +14,8 @@ import lib.connection as connection
 import threading
 
 
-
-configuration = basic.initiateShareLockHomes()
 LOGGER.write(log.LOGTAGS[0],'ShareLockHomes V'+settings.VERSION,'starting up...')
+configuration = basic.initiateShareLockHomes()
 #################################################################
 server = connection.SockServer(connection.ServerHandler, configuration.get()['server'])
 cserver = connection.SockServer(connection.ClientHandler, configuration.get()['client'])
