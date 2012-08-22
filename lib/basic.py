@@ -59,7 +59,7 @@ def initiateParameterAndConfig():
     if not logFilePath == False:
         LOGGER.activateFileMode(logFilePath)
     LOGGER.write(log.LOGTAGS[0],'Try to use config from file "' + configFilePath + '"')
-    configuration = config(configFilePath)
+    configuration = Config(configFilePath)
     logging = getConfigValue(configuration, 'logging')
     logFilePath = getConfigValue(configuration, 'logFilePath', 'sharelockhomes.log')
     if logging == True and LOGGER.writeToFile == False:
@@ -151,7 +151,7 @@ def isJsonFile(filePath):
 
 
 
-class config(object):
+class Config(object):
     def __init__(self, filePath, **keyWordArgs):
         self.filePath = filePath
         self.configuration = self.getConfigFromFile(filePath)

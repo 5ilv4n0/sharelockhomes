@@ -8,10 +8,10 @@ from lib.log import LOGGER
 import lib.settings as settings
 import lib.basic as basic
 import lib.log as log
+import lib.database as database
 import lib.connection as connection
 
-import sys, json, threading
-
+import threading
 
 
 
